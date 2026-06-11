@@ -4,33 +4,46 @@ import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n';
 
 function FooterStars() {
+  // 5-point star polygon helper
+  function starPoints(cx: number, cy: number, outerR: number): string {
+    const inner = outerR * 0.4;
+    const points: string[] = [];
+    for (let i = 0; i < 10; i++) {
+      const angle = (Math.PI / 5) * i - Math.PI / 2;
+      const r = i % 2 === 0 ? outerR : inner;
+      points.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
+    }
+    return points.join(' ');
+  }
+
   const stars = [
-    { x: '8%',  y: '25%', s: 10 },
-    { x: '85%', y: '20%', s: 8  },
-    { x: '20%', y: '70%', s: 6  },
-    { x: '90%', y: '65%', s: 12 },
-    { x: '45%', y: '15%', s: 7  },
-    { x: '60%', y: '80%', s: 9  },
+    { cx: 8,  cy: 25, r: 10, delay: '0s',   color: 'rgba(91,155,213,0.6)' },
+    { cx: 85, cy: 20, r: 8,  delay: '0.8s', color: 'rgba(255,255,255,0.45)' },
+    { cx: 20, cy: 70, r: 6,  delay: '1.5s', color: 'rgba(91,155,213,0.5)' },
+    { cx: 90, cy: 65, r: 12, delay: '0.4s', color: 'rgba(255,255,255,0.4)' },
+    { cx: 45, cy: 15, r: 7,  delay: '1.1s', color: 'rgba(168,204,234,0.55)' },
+    { cx: 60, cy: 80, r: 9,  delay: '2.0s', color: 'rgba(255,255,255,0.35)' },
   ];
+
   return (
     <div className="footer__stars" aria-hidden="true">
-      {stars.map((s, i) => (
-        <svg
-          key={i}
-          width={s.s}
-          height={s.s}
-          viewBox="0 0 24 24"
-          style={{
-            position: 'absolute',
-            left: s.x,
-            top: s.y,
-            fill: 'rgba(77,184,212,0.5)',
-            animation: `twinkle ${2.5 + i * 0.5}s ${i * 0.4}s ease-in-out infinite`,
-          }}
-        >
-          <path d="M12 2l2.09 6.26L20 10l-5.91 4.28L15.18 22 12 18.27 8.82 22l1.09-7.72L4 10l5.91-1.74z" />
-        </svg>
-      ))}
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+      >
+        {stars.map((s, i) => (
+          <polygon
+            key={i}
+            points={starPoints(s.cx, s.cy, s.r)}
+            fill={s.color}
+            style={{
+              transformOrigin: `${s.cx}% ${s.cy}%`,
+              animation: `twinkle ${2.5 + i * 0.5}s ${s.delay} ease-in-out infinite`,
+            }}
+          />
+        ))}
+      </svg>
     </div>
   );
 }
