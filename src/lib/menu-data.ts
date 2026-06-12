@@ -63,7 +63,6 @@ export const menuCategories: MenuCategory[] = [
           en: 'Banana, beans, egg, cream, cheese, pork chop and 1 baleada'
         },
         price: 16,
-        image: '/images/cguleta-con-tajadas.webp',
       },
       {
         id: 'desayuno-supremo',
