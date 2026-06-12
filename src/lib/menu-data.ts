@@ -1,4 +1,6 @@
+// Updated: Menu data configuration and assets
 export type Language = 'es' | 'en';
+
 
 export interface BilingualText {
   es: string;
@@ -237,9 +239,9 @@ export const menuCategories: MenuCategory[] = [
     theme: 'light',
     items: [
       {
-        id: 'sopa-pescado-jaiba',
-        name: { es: 'Sopa de Pescado con Jaiba', en: 'Fish & Crab Soup' },
-        description: { es: 'Sopa tradicional de pescado con jaiba', en: 'Traditional fish soup with crab' },
+        id: 'sopa-pescado-camarones',
+        name: { es: 'Sopa de Pescado con Camarones', en: 'Fish & Shrimp Soup' },
+        description: { es: 'Sopa tradicional de pescado con camarones', en: 'Traditional fish soup with shrimp' },
         price: null,
         image: '/images/sopa-de-pezcado-y-jaibas.webp',
       },
