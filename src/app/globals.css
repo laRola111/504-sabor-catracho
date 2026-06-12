@@ -114,14 +114,59 @@ ul, ol { list-style: none; }
   50%       { opacity: 1;    transform: scale(1.2); }
 }
 
-@keyframes float-up {
+@keyframes float-idle {
   0%   { transform: translateY(0px) rotate(0deg); }
   100% { transform: translateY(-10px) rotate(4deg); }
+}
+
+/* ── Logo entrance: dramatic scale-up + glow burst ── */
+@keyframes logo-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.45) translateY(40px);
+    filter: drop-shadow(0 0 0px rgba(91,155,213,0)) brightness(2.4);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-6px);
+    filter: drop-shadow(0 0 60px rgba(91,155,213,0.85)) drop-shadow(0 0 120px rgba(27,79,138,0.6)) brightness(1.4);
+  }
+  65% {
+    transform: scale(0.97) translateY(2px);
+    filter: drop-shadow(0 0 30px rgba(91,155,213,0.5)) brightness(1.1);
+  }
+  82% {
+    transform: scale(1.02) translateY(-2px);
+    filter: drop-shadow(0 10px 40px rgba(27,79,138,0.3)) brightness(1.0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0px);
+    filter: drop-shadow(0 10px 40px rgba(27,79,138,0.3)) brightness(1.0);
+  }
+}
+
+/* Glow ring that pulses outward on arrival */
+@keyframes logo-ring-pulse {
+  0%   { transform: scale(0.6); opacity: 0.9; }
+  60%  { transform: scale(1.6); opacity: 0.35; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Particles burst upward */
+@keyframes particle-rise {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
 }
 
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hero-content-reveal {
+  from { opacity: 0; transform: translateY(22px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes slide-in-right {
@@ -318,12 +363,60 @@ ul, ol { list-style: none; }
   text-align: center;
 }
 
+/* Logo wrapper — positions the ring + particles relative to the logo */
+.hero__logo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Opacity 0 until JS removes the .entering class */
+  animation: logo-entrance 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+/* After entrance completes, loop the float */
+.hero__logo-wrap.entrance-done {
+  animation: float-idle 3.2s ease-in-out infinite alternate;
+}
+
 .hero__logo {
   width: min(300px, 72vw);
   height: auto;
-  filter: drop-shadow(0 10px 40px rgba(27,79,138,0.3));
-  animation: float-up 3.2s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 1;
 }
+
+/* Radial glow ring — fires once on load */
+.hero__logo-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,155,213,0.55) 0%, rgba(27,79,138,0.25) 45%, transparent 72%);
+  animation: logo-ring-pulse 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Particle dots that burst upward */
+.hero__logo-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  animation: particle-rise 0.9s ease-out both;
+}
+
+/* Hero content items animate in after logo lands */
+.hero__content > *:not(.hero__logo-wrap) {
+  opacity: 0;
+  animation: hero-content-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero__badges    { animation-delay: 1.1s; }
+.hero__tagline   { animation-delay: 1.35s; }
+.hero__address   { animation-delay: 1.55s; }
 
 /* Welcome pill — styled like physical menu "BIENVENIDOS / WELCOME" pills */
 .hero__badges {
@@ -392,7 +485,7 @@ ul, ol { list-style: none; }
   opacity: 0.45;
   font-size: 12px;
   color: var(--blue-deep);
-  animation: float-up 1.6s ease-in-out infinite alternate;
+  animation: float-idle 1.6s ease-in-out infinite alternate;
   z-index: 3;
 }
 

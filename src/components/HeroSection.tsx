@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import { useLanguage } from '@/lib/i18n';
 
 /* ── 5-Point Star Field ──────────────────────────── */
@@ -89,6 +90,18 @@ function GoldenLeaf({ className }: { className: string }) {
 /* ── Hero Component ──────────────────────────────── */
 export default function HeroSection() {
   const { lang } = useLanguage();
+  const logoWrapRef = useRef<HTMLDivElement>(null);
+
+  /* Switch from entrance animation → idle float once entrance finishes */
+  useEffect(() => {
+    const el = logoWrapRef.current;
+    if (!el) return;
+    // entrance duration = 1.35s delay 0.15s = 1.5s total + small buffer
+    const timer = setTimeout(() => {
+      el.classList.add('entrance-done');
+    }, 1600);
+    return () => clearTimeout(timer);
+  }, []);
 
   const bienvenidos = lang === 'es' ? 'BIENVENIDOS' : 'WELCOME';
   const subtitulo   = lang === 'es'
@@ -98,6 +111,18 @@ export default function HeroSection() {
     ? 'Tradición y Sabor • Austin, TX'
     : 'Tradition & Flavor • Austin, TX';
   const scrollHint  = lang === 'es' ? 'Ver menú' : 'See menu';
+
+  /* 8 particles evenly distributed in a radial burst */
+  const particles = Array.from({ length: 8 }, (_, i) => {
+    const angle = (i / 8) * 2 * Math.PI;
+    const dist  = 90 + Math.random() * 50;
+    return {
+      tx: `${Math.cos(angle) * dist}px`,
+      ty: `${Math.sin(angle) * dist}px`,
+      delay: `${0.55 + i * 0.055}s`,
+      color: i % 2 === 0 ? 'rgba(91,155,213,0.9)' : 'rgba(255,255,255,0.9)',
+    };
+  });
 
   return (
     <section className="hero" aria-label={lang === 'es' ? 'Sección principal' : 'Hero section'}>
@@ -114,15 +139,38 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="hero__content">
-        <Image
-          src="/logo-504-catracha.png"
-          alt="504 Sabor Catracho — Auténtica Comida Hondureña"
-          width={320}
-          height={320}
-          className="hero__logo"
-          priority
-          style={{ width: 'min(300px, 72vw)', height: 'auto' }}
-        />
+
+        {/* ── Logo with entrance animation ── */}
+        <div className="hero__logo-wrap" ref={logoWrapRef} aria-hidden="false">
+          {/* Radial glow ring */}
+          <div className="hero__logo-ring" aria-hidden="true" />
+
+          {/* Particle burst */}
+          {particles.map((p, i) => (
+            <div
+              key={i}
+              className="hero__logo-particle"
+              aria-hidden="true"
+              style={{
+                ['--tx' as string]: p.tx,
+                ['--ty' as string]: p.ty,
+                background: p.color,
+                animationDelay: p.delay,
+                boxShadow: `0 0 6px 2px ${p.color}`,
+              }}
+            />
+          ))}
+
+          <Image
+            src="/logo-504-catracha.png"
+            alt="504 Sabor Catracho — Auténtica Comida Hondureña"
+            width={320}
+            height={320}
+            className="hero__logo"
+            priority
+            style={{ width: 'min(300px, 72vw)', height: 'auto' }}
+          />
+        </div>
 
         {/* BIENVENIDOS / WELCOME pill — matches physical menu */}
         <div className="hero__badges">

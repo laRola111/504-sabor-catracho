@@ -6,12 +6,12 @@ import { useLanguage } from '@/lib/i18n';
 
 /* Emoji fallback per category */
 const CATEGORY_EMOJI: Record<string, string> = {
-  desayunos: '🍳',
-  baleadas: '🫓',
-  tajadas: '🍗',
+  desayunos:       '🍳',
+  baleadas:        '🫓',
+  tajadas:         '🍗',
   'mariscos-carnes': '🐟',
-  sopas: '🍲',
-  bebidas: '🥤',
+  sopas:           '🍲',
+  bebidas:         '🥤',
 };
 
 interface MenuCardProps {
@@ -24,14 +24,15 @@ export default function MenuCard({ item, categoryId, dark = false }: MenuCardPro
   const { t, lang } = useLanguage();
   const emoji = CATEGORY_EMOJI[categoryId] ?? '🍽️';
 
-  const hasImage = false; // Set to true when real images are added
+  /* Show real image when available */
+  const hasImage = !!item.image;
 
   return (
     <article
       className={`menu-card${item.featured ? ' menu-card--featured' : ''}`}
       aria-label={t(item.name)}
     >
-      {/* Image */}
+      {/* ── Image / Emoji Placeholder ── */}
       <div className="menu-card__image-wrap">
         {hasImage && item.image ? (
           <Image
@@ -48,15 +49,18 @@ export default function MenuCard({ item, categoryId, dark = false }: MenuCardPro
           </div>
         )}
 
-        {/* Featured badge */}
+        {/* Featured badge — gold like physical menu highlighted items */}
         {item.featured && (
-          <span className="menu-card__featured-badge" aria-label={lang === 'es' ? 'Destacado' : 'Featured'}>
+          <span
+            className="menu-card__featured-badge"
+            aria-label={lang === 'es' ? 'Destacado' : 'Featured'}
+          >
             ⭐ {lang === 'es' ? 'Destacado' : 'Featured'}
           </span>
         )}
       </div>
 
-      {/* Body */}
+      {/* ── Card Body ── */}
       <div className="menu-card__body">
         <h3 className="menu-card__name">{t(item.name)}</h3>
 
@@ -64,19 +68,34 @@ export default function MenuCard({ item, categoryId, dark = false }: MenuCardPro
           <p className="menu-card__desc">{t(item.description)}</p>
         )}
 
+        {/* Footer: price — matches physical menu dotted price pattern */}
         <div className="menu-card__footer">
           {item.price !== null && item.price !== undefined ? (
             <div>
-              <span className="menu-card__price">${item.price.toFixed(2)}</span>
+              <span className="menu-card__price">${item.price.toFixed(0)}</span>
               {item.priceNote && (
                 <div className="menu-card__price-note">{t(item.priceNote)}</div>
               )}
             </div>
           ) : (
             <span className="menu-card__price-ask">
-              {item.priceNote ? t(item.priceNote) : (lang === 'es' ? 'Consultar precio' : 'Ask for price')}
+              {item.priceNote
+                ? t(item.priceNote)
+                : lang === 'es' ? 'Consultar precio' : 'Ask for price'}
             </span>
           )}
+
+          {/* Category icon chip */}
+          <span
+            style={{
+              fontSize: 22,
+              opacity: 0.6,
+              lineHeight: 1,
+            }}
+            aria-hidden="true"
+          >
+            {emoji}
+          </span>
         </div>
       </div>
     </article>
