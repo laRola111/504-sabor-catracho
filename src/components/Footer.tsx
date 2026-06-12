@@ -185,6 +185,18 @@ export default function Footer() {
             <span aria-hidden="true">🇭🇳</span>{' '}
             {lang === 'es' ? 'Hecho con amor en Austin, TX' : 'Made with love in Austin, TX'}
           </p>
+          <p className="footer__credit">
+            {lang === 'es' ? 'Creado por' : 'Created by'}{' '}
+            <a
+              href="https://ruedalarolamedia.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__credit-link"
+              aria-label="Rueda La Rola Media"
+            >
+              Rueda La Rola Media
+            </a>
+          </p>
         </div>
       </div>
     </footer>

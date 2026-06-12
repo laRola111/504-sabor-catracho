@@ -1073,6 +1073,24 @@ ul, ol { list-style: none; }
   color: rgba(255,255,255,0.4);
 }
 
+.footer__credit {
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+}
+
+.footer__credit-link {
+  color: rgba(91,155,213,0.7);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer__credit-link:hover {
+  color: rgba(91,155,213,1);
+  text-decoration: underline;
+}
+
 /* ── Responsive Padding ──────────────────────────── */
 @media (min-width: 768px) {
   :root {
